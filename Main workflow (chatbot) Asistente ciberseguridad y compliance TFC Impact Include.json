@@ -1,1 +1,283 @@
-
+{
+  "name": "Main workflow (chatbot) Asistente ciberseguridad y compliance TFC Impact Include",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hola, soy el asistente de MIDTECH! En que puedo ayudarle?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -640,
+        -304
+      ],
+      "id": "f04afd70-f1dd-43e5-8ad4-4e5736bd31f9",
+      "name": "When chat message received",
+      "webhookId": "240e2845-a148-45b5-b2d6-c5c2eab50376"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "# ROL:\n\nEres el asistente de ciberseguridad y Compliance de la empresa MIDTECH S.A y tu misión es realizar las siguientes tareas: análisis de políticas de seguridad, detección de riesgos e incumplimientos, respuesta a preguntas de auditoría y propuestas de mejora.\n\n---\n\n## CONTEXTO:\n\nMIDTECH S.A es una empresa cuyo sector de actividad es el de salud. Se dedica a la biotecnología y la industria farmacéutica. Algunas de sus líneas de negocio son Biopharma y Diagnóstico entre muchas otras. Entre sus clientes se encuentran los hospitales públicos.\n\nEl problema de MIDTECH es que debido a que opera en el sector salud, maneja datos sensibles y está sujeto a estrictas normativas europeas como la GDPR (Reglamento UE 2016/679) y la Directiva NIS2 (Directiva UE 2022/2555), normativas españolas como  LOPDGDD (Ley Orgánica 3/2018), ENS Esquema Nacional de Seguridad (Real Decreto 311/2022) y Real Decreto-ley 12/2018 (transposición de la Directiva NIS original) y al marco de referencia técnico ISO 27001.\n\nTu misión principal es completar con éxito cada una de las siguientes 4 capacidades:\n\nCapacidad 1 -> Análisis de políticas de seguridad\n\nCapacidad 2 -> Detección de riesgos e incumplimientos\n\nCapacidad 3 -> Responder a preguntas de auditoría\n\nCapacidad 4 -> Propuestas de mejora:\n\nDebes dar propuestas de mejora concretas para la política de MIDTECH.\n\n---\n\n## ESPECIFICACIONES:\n\n- Cuando el usuario realice una consulta en el chat relacionada con las normativas, debes usar la herramienta \"Supabase Vector Store\" para recuperar la información de la base de datos vectorial de Supabase y devolverla como output al usuario.\n\n- Al inicio de la conversación tienes que decir \"Hola! Soy el asistente de ciberseguridad y compliance de MIDTECH. En qué le puedo ayudar?\n\n- Después de cada consulta del usuario, debes decir \"Tienes alguna otra duda o consulta\".\n\n- Mantén un tono cálido, profesional y amable \n\n- Siempre estarás dispuesto a ayudar cuándo el usuario realice una consulta.\n\n\n- Debes mencionar siempre la fuente en la que has obtenido la información solicitada por el usuario.\n\n---\n\n## FORMATO DE RESPUESTA\n\n- Responde en texto plano. \n\n\n\n\n---\n\n## CRITERIOS DE CALIDAD:\n\n- No cometas faltas de ortografía bajo ningún concepto.\n\n- Nunca faltes al respeto al usuario que te esté realizando las consultas por el chat.\n\n- Cíñete estrictamente a lo que está pidiendo el usuario.\n\n\n---\n\n## HERRAMIENTAS QUE DEBES UTILIZAR:\n\n- Supabase Vector Store: debes usarla para recuperar chunks semántica similares a lo que te solicita el usuario\n\n---\n\n\n### VERIFICACIÓN:\n\nRevisa con esmero tu respuesta antes de entregarla, si no estás seguro sigue razonando hasta que estés totalmente seguro."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -288,
+        -352
+      ],
+      "id": "2c0692af-5688-4a67-bf85-481f7a47213c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -96,
+        -32
+      ],
+      "id": "05159e56-876e-4224-a266-5d0cfa8e5ba1",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -352,
+        -16
+      ],
+      "id": "5ee62a07-11d9-4f24-91d7-2647fa029e0d",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "LCpN628DXdAgq5MM",
+          "name": "n8n asistente TFC Include"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        192,
+        -16
+      ],
+      "id": "33a7a54a-5ab3-4239-808c-b78a489e3ec4",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "LCpN628DXdAgq5MM",
+          "name": "n8n asistente TFC Include"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Usa esta herramienta para buscar información de los documentos que te pida el usuario",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        112,
+        -320
+      ],
+      "id": "78bcf101-1e24-4aa3-8b8a-3bd60d1961ee",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "0vQGkLRXJbjlwHjd",
+          "name": "n8n impact include"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Entrada de datos del usuario a través del chat",
+        "height": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -688,
+        -432
+      ],
+      "typeVersion": 1,
+      "id": "80f3eeaf-0cb0-4699-832f-e80390797581",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "### Transforma los chunks (fragmentos) en vectores para introducir en la base de datos vectorial de Supabase",
+        "height": 256,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        96,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "cae1987c-1e31-4eae-96e7-93612086ae1c",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "#### Este módulo es el núcleo del worflow. Gestiona la memoria, el modelo LLM y la conexión con la BBDD de Supabase",
+        "height": 208,
+        "width": 432,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -400,
+        -432
+      ],
+      "typeVersion": 1,
+      "id": "f3f3ff72-7b09-4a13-a2d3-abee6179239e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "### Se conecta con la bbdd vectorial y recupera los chunks semánticamente similares al input",
+        "height": 224,
+        "width": 272,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        96,
+        -432
+      ],
+      "typeVersion": 1,
+      "id": "1f81283a-b7e5-4520-9f9a-b5149147c729",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "#### Su función es recordar el contexto de la conversación (almacena el contexto de los últimos 5 mensajes)",
+        "height": 240,
+        "width": 256,
+        "color": "#E9071E"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -176,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "a90f824d-b10f-4e23-8322-15ebe5c960af",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "#### Modelo LLM que procesa las consultas y devuelve un output ",
+        "height": 224,
+        "width": 208,
+        "color": "#E2DB18"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -416,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "96e030d4-672d-425c-8b15-4db447dbbde7",
+      "name": "Sticky Note5"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "1a8d7f86-b2a7-490f-b26f-ac18afc65136",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1f6ef6d6e9de13cb36d77e68edd6613d35d94c573bf5ad7cc4ab3e625d55f42f"
+  },
+  "id": "4YhEU4BllvSLkaP5",
+  "tags": []
+}
