@@ -40,7 +40,7 @@ Las funcionalidades implementadas permiten:
 
 | Componente         | Tecnología Utilizada                 |
 | ------------------ | ------------------------------------ |
-| Modelo LLM         | OpenAI GPT-4o-mini                   |
+| Modelo LLM         | OpenAI GPT-5.4-mini                   |
 | Orquestación       | n8n                                  |
 | Base Vectorial     | Supabase Vector Store                |
 | Embeddings         | OpenAI Embeddings                    |
