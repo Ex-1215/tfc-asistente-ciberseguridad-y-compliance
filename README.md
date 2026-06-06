@@ -52,9 +52,9 @@ Las funcionalidades implementadas permiten:
 
 ## 🛠️ Decisiones Tecnológicas y Justificación
 
-### 🤖 Modelo LLM: OpenAI GPT-4o-mini
+### 🤖 Modelo LLM: OpenAI GPT-5.4-mini
 
-Se ha seleccionado GPT-4o-mini por ofrecer una excelente relación entre rendimiento, velocidad de respuesta y coste operativo. Aunque es una versión más ligera de GPT-4o, mantiene una capacidad de razonamiento suficiente para tareas de análisis documental, consultas normativas y generación de recomendaciones de cumplimiento.
+Se ha seleccionado GPT-5.4-mini por ofrecer una excelente relación entre rendimiento, velocidad de respuesta y coste operativo. Aunque es una versión más ligera de GPT-5.4-mini, mantiene una capacidad de razonamiento suficiente para tareas de análisis documental, consultas normativas y generación de recomendaciones de cumplimiento.
 
 Su integración con n8n y OpenAI permite procesar consultas sobre documentación corporativa y normativa de forma eficiente, proporcionando respuestas estructuradas y fundamentadas en el contexto recuperado por el sistema RAG.
 
