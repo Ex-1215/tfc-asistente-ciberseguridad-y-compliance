@@ -1,0 +1,222 @@
+{
+  "name": "RAG workflow (upload Drive to Supabase)",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": []
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1WtYkm06vILiXOeGFJW3AH6XhipmCZvyA",
+          "mode": "list",
+          "cachedResultName": "Documentos cargados a Supabase TFC (Política midtech e ISO 27001 Y ENS)",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1WtYkm06vILiXOeGFJW3AH6XhipmCZvyA"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        48
+      ],
+      "id": "4910c74f-3c97-4e25-bf37-aec3bc3e2f6e",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "FggVNcddlZ4ywQR5",
+          "name": "impactinclude tfc"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -224,
+        16
+      ],
+      "id": "2ac27937-5872-48ef-8633-653c3095717e",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "FggVNcddlZ4ywQR5",
+          "name": "impactinclude tfc"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "proyecto",
+          "mode": "list",
+          "cachedResultName": "proyecto"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        64,
+        -48
+      ],
+      "id": "091e8ae5-fafe-47d2-9f13-58dcbd19e33d",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "0vQGkLRXJbjlwHjd",
+          "name": "n8n impact include"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        160
+      ],
+      "id": "09b85613-2b5b-42ba-b6a1-3df5ab64f177",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "LCpN628DXdAgq5MM",
+          "name": "n8n asistente TFC Include"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        224,
+        160
+      ],
+      "id": "32a63d0a-1396-4da9-bcd0-04992f411bd5",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "content": "### Está a la espera de la subida de los documentos en pdf en la carpeta de Google Drive (de 1 en 1)",
+        "height": 256
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        -64
+      ],
+      "id": "e56d5275-599b-4ae9-b8ea-2c9b79c97fc2",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "### Descarga cada documento de la normativa en PDF que se sube a la carpeta",
+        "height": 272,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        -80
+      ],
+      "id": "ca6a41e8-ff21-4835-a95d-11408f26221b",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "### Indexa 1 por 1 cada documento en la BBDD vectorial de Supabase",
+        "height": 192,
+        "width": 416
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        -112
+      ],
+      "id": "b8c2495e-2ab5-45a2-9c1b-7238431dcf30",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "2855679d-c0dd-46ae-ad4c-42487528f2e9",
+  "meta": {
+    "instanceId": "1f6ef6d6e9de13cb36d77e68edd6613d35d94c573bf5ad7cc4ab3e625d55f42f"
+  },
+  "id": "DuodQKsNdLK1CXy6",
+  "tags": []
+}
