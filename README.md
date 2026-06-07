@@ -54,7 +54,7 @@ Las funcionalidades implementadas permiten:
 
 ### 🤖 Modelo LLM: OpenAI GPT-5.4-mini
 
-Se ha seleccionado GPT-5.4-mini por ofrecer una excelente relación entre rendimiento, velocidad de respuesta y coste operativo. Aunque es una versión más ligera de GPT-5.4-mini, mantiene una capacidad de razonamiento suficiente para tareas de análisis documental, consultas normativas y generación de recomendaciones de cumplimiento.
+Se ha seleccionado GPT-5.4-mini por ofrecer una excelente relación entre rendimiento, velocidad de respuesta y coste operativo. Este modelo tiene una capacidad de razonamiento suficiente para tareas de análisis documental, consultas normativas y generación de recomendaciones de cumplimiento.
 
 Su integración con n8n y OpenAI permite procesar consultas sobre documentación corporativa y normativa de forma eficiente, proporcionando respuestas estructuradas y fundamentadas en el contexto recuperado por el sistema RAG.
 
@@ -101,12 +101,13 @@ Este flujo gestiona la interacción con el usuario y la generación de respuesta
 **Funcionamiento:**
 
 1. El usuario envía una consulta mediante el chat.
-2. El AI Agent recibe la petición.
-3. Supabase Vector Store recupera los fragmentos más relevantes mediante búsqueda semántica.
-4. GPT-4o-mini recibe los fragmentos recuperados junto con la consulta del usuario.
-5. El modelo genera una respuesta basada en la documentación indexada.
-6. La memoria conversacional conserva el contexto reciente del diálogo.
-7. El usuario recibe una respuesta fundamentada y trazable.
+2. El nodo wait retiene la consulta enviada por el chat durante 10 segundos y la pasa al asistente. Esto se hace para evitar congestionar la API del modelo LLM con muchas solicitudes.
+3. El AI Agent recibe la petición.
+4. Supabase Vector Store recupera los fragmentos más relevantes mediante búsqueda semántica.
+5. GPT-5.4-mini recibe los fragmentos recuperados junto con la consulta del usuario.
+6. El modelo genera una respuesta basada en la documentación indexada.
+7. La memoria conversacional conserva el contexto reciente del diálogo.
+8. El usuario recibe una respuesta fundamentada y trazable.
 
 Esta arquitectura permite responder utilizando información real almacenada en la base documental en lugar de depender exclusivamente del conocimiento interno del modelo.
 
@@ -193,11 +194,8 @@ Todos los documentos han sido indexados mediante OpenAI Embeddings y almacenados
 ├── workflows/
 │   ├── Main workflow (chatbot).json
 │   └── RAG workflow (upload Drive to Supabase).json
-└── evidencias/
-    ├── fase1/
-    ├── fase2/
-    ├── fase3/
-    └── fase4/
+└──
+
 ```
 
 ---
@@ -207,7 +205,7 @@ Todos los documentos han sido indexados mediante OpenAI Embeddings y almacenados
 1. El usuario realiza una consulta o solicita un análisis.
 2. n8n recibe y procesa la petición.
 3. Supabase recupera los fragmentos más relevantes mediante búsqueda semántica.
-4. GPT-4o-mini utiliza el contexto recuperado para construir la respuesta.
+4. GPT-5.4-mini utiliza el contexto recuperado para construir la respuesta.
 5. El asistente genera una respuesta fundamentada en la documentación indexada.
 6. El usuario recibe una respuesta trazable y alineada con la normativa correspondiente.
 
@@ -220,7 +218,6 @@ Todos los documentos han sido indexados mediante OpenAI Embeddings y almacenados
 * Generación automática de informes PDF.
 * Dashboard de riesgos y cumplimiento.
 * Exportación automática de evidencias para auditorías.
-* Gestión avanzada de usuarios y permisos.
 
 ---
 
